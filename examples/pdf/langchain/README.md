@@ -42,7 +42,7 @@ pip install indexify indexify-langchain langchain langchain-openai
 
 ### 1. Set Up the Extraction Graph
 
-Create a file named `setup_extraction_graph.py`:
+Create a file named `setup_graph.py`:
 
 ```python
 from indexify import IndexifyClient, ExtractionGraph
@@ -73,7 +73,7 @@ client.create_extraction_graph(extraction_graph)
 Run this script to set up the extraction pipeline:
 
 ```bash
-python setup_extraction_graph.py
+python setup_graph.py
 ```
 
 ### 2. Implement the PDF QA System
@@ -154,8 +154,11 @@ Replace `"YOUR_OPENAI_API_KEY"` with your actual OpenAI API key.
 
 ## Running the PDF QA System
 
-Execute the Python script to process a PDF and answer questions:
+Reference from PDF file from which answer should be generated:
 
+<img src="https://raw.githubusercontent.com/tensorlakeai/indexify/main/examples/pdf/langchain/paper.png" width="600"/>
+
+You can run the Python script to process a PDF and answer questions:
 ```bash
 python upload_and_retrieve.py
 ```

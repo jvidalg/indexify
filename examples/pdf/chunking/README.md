@@ -48,7 +48,7 @@ indexify-extractor join-server
 
 The extraction graph defines the flow of data through our chunking pipeline. We'll create a graph that first extracts text from PDFs, then chunks that text using the RecursiveCharacterTextSplitter.
 
-Create a new Python file called `pdf_chunking_graph.py` and add the following code:
+Create a new Python file called `setup_graph.py` and add the following code:
 
 ```python
 from indexify import IndexifyClient, ExtractionGraph
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     # Chunk the PDF
     chunks = retreive_chunks(pdf_path)
     print(f"Number of chunks generated: {len(chunks)}")
-    print("\nFirst chunk:")
+    print("\nLast chunk:")
     print(chunks[0][:500] + "...")  # Print first 500 characters of the first chunk
 ```
 
@@ -132,7 +132,13 @@ You can run the Python script to process a PDF and generate chunks:
 ```bash
 python upload_and_retrieve.py
 ```
-<img src="https://raw.githubusercontent.com/tensorlakeai/indexify/main/examples/pdf/chunking/carbon.png" width="600"/>
+   Sample Page to extract chunk from:
+
+   <img src="https://raw.githubusercontent.com/tensorlakeai/indexify/main/examples/pdf/chunking/screenshot.png" width="600"/>
+
+   Sample Chunk extracted from page:
+   
+   <img src="https://raw.githubusercontent.com/tensorlakeai/indexify/main/examples/pdf/chunking/carbon.png" width="600"/>
 
 ## Customization and Advanced Usage
 

@@ -37,7 +37,7 @@
     "/executors": {
       "get": {
         "tags": ["operations"],
-        "summary": "List all executors running extractors in the cluster",
+        "summary": "List Executors",
         "operationId": "listExecutors",
         "responses": {
           "200": {
@@ -66,7 +66,7 @@
     "/extractors": {
       "get": {
         "tags": ["operations"],
-        "summary": "List all extractors available in the cluster",
+        "summary": "List Extractors",
         "operationId": "listExtractors",
         "responses": {
           "200": {
@@ -146,7 +146,7 @@
     "/namespace/{namespace}/extraction_graphs/{graph}/links": {
       "get": {
         "tags": ["operations"],
-        "summary": "Get all the extraction graph links for a given extraction graph",
+        "summary": "List Extraction Graph Links",
         "operationId": "getExtractionGraphLinks",
         "parameters": [
           {
@@ -196,7 +196,7 @@
       },
       "post": {
         "tags": ["operations"],
-        "summary": "Create a link with a given extraction graph",
+        "summary": "Create Extraction Graph Link",
         "operationId": "linkExtractionGraphs",
         "parameters": [
           {
@@ -248,7 +248,7 @@
     "/namespaces": {
       "get": {
         "tags": ["operations"],
-        "summary": "List all namespaces registered on the server",
+        "summary": "List Namespaces",
         "operationId": "listNamespaces",
         "responses": {
           "200": {
@@ -275,7 +275,7 @@
       },
       "post": {
         "tags": ["operations"],
-        "summary": "Create a new namespace",
+        "summary": "Create Namespace",
         "operationId": "createNamespace",
         "requestBody": {
           "content": {
@@ -314,7 +314,7 @@
     "/namespaces/{namespace}/extraction_graphs/{extraction_graph}/content/{content_id}/extraction_policies/{extraction_policy}": {
       "get": {
         "tags": ["retrieval"],
-        "summary": "Get extracted content metadata for ingested content",
+        "summary": "List Extracted Content Metadata",
         "operationId": "getContentTreeMetadata",
         "parameters": [
           {
@@ -342,7 +342,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "ID of the content"
+            "description": "Ingested Content ID"
           },
           {
             "name": "extraction_policy",
@@ -501,7 +501,7 @@
     "/namespaces/{namespace}/content/{content_id}/download": {
       "get": {
         "tags": ["retrieval"],
-        "summary": "Download content with a given id",
+        "summary": "Download Content by Id",
         "operationId": "downloadContent",
         "parameters": [
           {
@@ -551,7 +551,7 @@
     "/namespaces/{namespace}/content/{content_id}/metadata": {
       "get": {
         "tags": ["retrieval"],
-        "summary": "Get content metadata for a specific content id",
+        "summary": "Get Content Metadata by Id",
         "operationId": "getContentMetadata",
         "parameters": [
           {
@@ -637,10 +637,59 @@
         }
       }
     },
+    "/namespaces/{namespace}/extraction_graphs/{extraction_graph}/analytics": {
+      "get": {
+        "tags": ["operations"],
+        "summary": "Get Analytics for an extraction graph",
+        "operationId": "extraction_graph_analytics",
+        "parameters": [
+          {
+            "name": "namespace",
+            "in": "path",
+            "description": "Namespace of the content",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "extraction_graph",
+            "in": "path",
+            "description": "Extraction graph name",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return Analytics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractionGraphAnalytics"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unable to list tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/namespaces/{namespace}/extraction_graphs/{extraction_graph}/content": {
       "get": {
         "tags": ["retrieval"],
-        "summary": "List all the content ingested into an extraction graph",
+        "summary": "List Ingested Content",
         "operationId": "listContent",
         "parameters": [
           {
@@ -748,7 +797,7 @@
     "/namespaces/{namespace}/extraction_graphs/{extraction_graph}/extract": {
       "post": {
         "tags": ["ingestion"],
-        "summary": "Upload a file to an extraction graph in a namespace",
+        "summary": "Upload Files",
         "operationId": "uploadFile",
         "parameters": [
           {
@@ -827,7 +876,7 @@
     "/namespaces/{namespace}/extraction_graphs/{extraction_graph}/extraction_policies/{extraction_policy}/tasks": {
       "get": {
         "tags": ["operations"],
-        "summary": "List Tasks generated for a given content and a given extraction policy",
+        "summary": "List Tasks",
         "operationId": "listTasks",
         "parameters": [
           {
@@ -932,7 +981,7 @@
     "/namespaces/{namespace}/indexes": {
       "get": {
         "tags": ["retrieval"],
-        "summary": "List all the indexes in a given namespace",
+        "summary": "List Indexes",
         "operationId": "listIndexes",
         "parameters": [
           {
@@ -972,7 +1021,7 @@
     "/namespaces/{namespace}/indexes/{index}/search": {
       "post": {
         "tags": ["retrieval"],
-        "summary": "Search a vector index in a namespace",
+        "summary": "Search Vector Index",
         "operationId": "indexSearch",
         "parameters": [
           {
@@ -1032,7 +1081,7 @@
     "/state_changes": {
       "get": {
         "tags": ["operations"],
-        "summary": "List the state changes in the system",
+        "summary": "List System Events",
         "operationId": "listStateChanges",
         "responses": {
           "200": {
@@ -1366,6 +1415,18 @@
               "$ref": "#/components/schemas/ExtractionPolicy"
             },
             "description": "List of extraction policies in this graph"
+          }
+        }
+      },
+      "ExtractionGraphAnalytics": {
+        "type": "object",
+        "required": ["task_analytics"],
+        "properties": {
+          "task_analytics": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TaskAnalytics"
+            }
           }
         }
       },
@@ -1865,6 +1926,34 @@
               "type": "string"
             },
             "description": "List of index tables associated with the task"
+          }
+        }
+      },
+      "TaskAnalytics": {
+        "type": "object",
+        "required": [
+          "pending",
+          "success",
+          "failure"
+        ],
+        "properties": {
+          "pending": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Number of pending tasks"
+          },
+          "success": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Number of successful tasks"
+          },
+          "failure": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "description": "Number of failed tasks"
           }
         }
       },

@@ -19,6 +19,9 @@
     "name": "Get in Touch",
     "url": "https://dub.sh/diptanu-calendly"
   },
+  "primaryTab": {
+      "name": "📄 Documentation"
+  },
   "tabs": [
     {
       "name": "👨‍💻 API Reference",
@@ -31,6 +34,10 @@
     {
       "name": "📚 Language SDKs",
       "url": "sdks"
+    },
+    {
+      "name": "⬇️ Download",
+      "url": "download"
     }
   ],
   "anchors": [
@@ -47,21 +54,21 @@
   ],
   "navigation": [
     {
-      "group": "Overview",
+      "group": "Get Started",
       "pages": [
         "introduction",
+        "docs/getting-started-basic",
+        "docs/getting-started-intermediate"
+      ]
+    },
+    {
+      "group": "Overview",
+      "pages": [
         "key-concepts",
         "architecture",
         "comparisons",
         "extractors",
         "develop_extractors"
-      ]
-    },
-    {
-      "group": "Get Started",
-      "pages": [
-        "docs/getting-started-basic",
-        "docs/getting-started-intermediate"
       ]
     },
     {
@@ -85,11 +92,11 @@
     {
       "group": "Pre-Built Extractors",
       "pages": [
-        "extractors/audio",
-        "extractors/embedding",
-        "extractors/image",
-        "extractors/pdf",
         "extractors/text",
+        "extractors/pdf",
+        "extractors/embedding",
+        "extractors/audio",
+        "extractors/image",
         "extractors/video"
       ]
     },
@@ -97,9 +104,10 @@
       "group": "Language SDKs",
       "pages": [
         "sdks/index",
-        "sdks/content_ingestion",
         "sdks/extraction_graphs",
-        "sdks/retrieval"
+        "sdks/content_ingestion",
+        "sdks/retrieval",
+        "sdks/namespaces"
       ]
     },
     {
@@ -123,6 +131,12 @@
       "group": "Examples",
       "pages": [
         "examples/index"
+      ]
+    },
+    {
+      "group": "Install",
+      "pages": [
+        "download/index"
       ]
     },
     {
@@ -152,6 +166,7 @@
         "api-reference/operations/list-all-executors-running-extractors-in-the-cluster",
         "api-reference/operations/list-all-extractors-available-in-the-cluster",
         "api-reference/operations/get-all-the-extraction-graph-links-for-a-given-extraction-graph",
+        "api-reference/operations/get-analytics-for-an-extraction-graph",
         "api-reference/operations/create-a-link-with-a-given-extraction-graph",
         "api-reference/operations/list-all-namespaces-registered-on-the-server",
         "api-reference/operations/create-a-new-namespace",
@@ -171,7 +186,8 @@
   },
   "feedback": {
     "suggestEdit": true,
-    "raiseIssue": true
+    "raiseIssue": true,
+    "thumbsRating": true
   },
   "seo": {
     "indexHiddenPages": true

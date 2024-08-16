@@ -30,6 +30,7 @@ api:
 
 coordinator:
   enabled: true
+  name: coordinator
 
   image: tensorlake/indexify:stable
 

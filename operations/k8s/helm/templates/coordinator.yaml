@@ -12,45 +12,45 @@ spec:
     {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 4 }}
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: coordinator
+  name: {{ .Values.coordinator.name }}
   labels:
-    {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 4 }}
+    {{- include "labels" (dict "name" .Values.coordinator.name "component" "coordinator" "global" $) | nindent 4 }}
 spec:
-  replicas: 1
+  serviceName: {{ .Values.coordinator.serviceName }}
+  replicas: {{ .Values.coordinator.replicaCount }}
   selector:
     matchLabels:
-    {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 6 }}
+      app: {{ .Values.coordinator.name }}
   template:
     metadata:
       labels:
-        {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 8 }}
-
+        app: {{ .Values.coordinator.name }}
     spec:
       containers:
         - name: indexify
-          image: {{ .image }}
-
+          image: {{ .Values.coordinator.image }}
           command: ['indexify']
           args:
             - coordinator
             - --config-path
-            - ./config/config.yaml
-
+            - /etc/coordinator/config.yaml
           volumeMounts:
-            - mountPath: /indexify/config
+            - mountPath: /etc/coordinator
               name: config
               readOnly: true
             - mountPath: /data
               name: data
-
       volumes:
         - name: config
           configMap:
-            name: indexify
-        - name: data
-          emptyDir: {}
-
-{{- end }}
-{{- end }}
+            name: {{ .Values.coordinator.name }}-config-{{ .pod.name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

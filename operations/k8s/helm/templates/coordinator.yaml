@@ -1,5 +1,32 @@
 {{- with .Values.coordinator }}
 {{- if .enabled }}
+{{- $statefulsetName := .name }}
+{{- $replicaCount := .replicaCount | default 1 }}
+{{- range $i, $e := until $replicaCount }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $statefulsetName }}-config-{{ $i }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "labels" (dict "name" $statefulsetName "component" "config" "global" $) | nindent 4 }}
+data:
+  config.yaml: |-
+    coordinator_addr: {{ $statefulsetName }}-0.{{ $statefulsetName }}.{{ $.Release.Namespace }}.svc.cluster.local:8950
+    raft_port: 8970
+    seed_node: {{ $statefulsetName }}-0.{{ $statefulsetName }}.{{ $.Release.Namespace }}.svc.cluster.local:8970
+    node_id: {{ $i }}
+    state_store:
+      path: /data/state
+    db_url: {{ $.Values.dbURL }}
+    index_config:
+      {{- $.Values.indexConfig| toYaml | nindent 6 }}
+    metadata_storage:
+      {{- $.Values.metadataStorage | toYaml | nindent 6 }}
+    blob_storage:
+      {{- $.Values.blobStore.config | toYaml | nindent 6 }}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -14,43 +41,43 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.coordinator.name }}
+  name: {{ .name }}
   labels:
-    {{- include "labels" (dict "name" .Values.coordinator.name "component" "coordinator" "global" $) | nindent 4 }}
+    {{- include "labels" (dict "name" .name "component" "coordinator" "global" $) | nindent 4 }}
 spec:
-  serviceName: {{ .Values.coordinator.serviceName }}
-  replicas: {{ .Values.coordinator.replicaCount }}
+  serviceName: {{ .name }}
+  replicas: {{ .replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.coordinator.name }}
+      app: {{ .name }}
   template:
     metadata:
       labels:
-        app: {{ .Values.coordinator.name }}
+        app: {{ .name }}
     spec:
       containers:
         - name: indexify
-          image: {{ .Values.coordinator.image }}
+          image: {{ .image }}
           command: ['indexify']
           args:
             - coordinator
             - --config-path
             - /etc/coordinator/config.yaml
           volumeMounts:
+            {{- range $i, $e := until $replicaCount }}
             - mountPath: /etc/coordinator
-              name: config
+              name: config-{{ $i }}
               readOnly: true
+            {{- end }}
             - mountPath: /data
               name: data
       volumes:
-        - name: config
+        {{- range $i, $e := until $replicaCount }}
+        - name: config-{{ $i }}
           configMap:
-            name: {{ .Values.coordinator.name }}-config-{{ .pod.name }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: 1Gi
+            name: {{ $statefulsetName }}-config-{{ $i }}
+        {{- end }}
+        - name: data
+          emptyDir: {}
+{{- end }}
+{{- end }}

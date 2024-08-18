@@ -1,7 +1,7 @@
 {{- with .Values.coordinator }}
 {{- if .enabled }}
 {{- $statefulsetName := .name }}
-{{- $replicaCount := .replicaCount | default 1 }}
+{{- $replicaCount := .replicaCount | int }}
 {{- range $i, $e := until $replicaCount }}
 ---
 apiVersion: v1
@@ -33,8 +33,10 @@ kind: Service
 metadata:
   name: coordinator
 spec:
+  clusterIP: None
   ports:
     - port: 8950
+      targetPort: 8950
   selector:
     {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 4 }}
 ---

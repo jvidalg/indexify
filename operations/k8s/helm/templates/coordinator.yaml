@@ -1,7 +1,7 @@
 {{- with .Values.coordinator }}
 {{- if .enabled }}
 {{- $statefulsetName := .name }}
-{{- $replicaCount := .replicaCount | int }}
+{{- $replicaCount := .replicas | int }}
 {{- range $i, $e := until $replicaCount }}
 ---
 apiVersion: v1
@@ -36,9 +36,13 @@ spec:
   clusterIP: None
   ports:
     - port: 8950
+      name: coordinator
       targetPort: 8950
+    - port: 8970
+      name: seed
+      targetPort: 8970
   selector:
-    {{- include "labels" (dict "name" "coordinator" "component" "coordinator" "global" $) | nindent 4 }}
+    app: coordinator
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -48,7 +52,7 @@ metadata:
     {{- include "labels" (dict "name" .name "component" "coordinator" "global" $) | nindent 4 }}
 spec:
   serviceName: {{ .name }}
-  replicas: {{ .replicaCount }}
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
       app: {{ .name }}

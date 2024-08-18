@@ -32,7 +32,7 @@ coordinator:
   enabled: true
   name: coordinator
   image: tensorlake/indexify:stable
-  replicaCount: 2
+  replicas: 2
 
 extractors:
   # - image: tensorlake/chunker:latest

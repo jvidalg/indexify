@@ -1,4 +1,4 @@
-dbURL: # db_url: postgres://postgres:indexify@vector-store/indexify
+dbURL: # db_url: postgres://postgres:indexify@terraform-20240813131549107500000012.cehuwbmakiwh.us-east-1.rds.amazonaws.com/indexify
 indexConfig:
   # index_store: PgVector
   # pg_vector_config:
@@ -30,8 +30,9 @@ api:
 
 coordinator:
   enabled: true
-
+  name: coordinator
   image: tensorlake/indexify:stable
+  replicas: 2
 
 extractors:
   # - image: tensorlake/chunker:latest

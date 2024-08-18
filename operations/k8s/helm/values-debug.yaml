@@ -1,0 +1,47 @@
+dbURL: postgres://indexify_user:indexify@terraform-20240813131549107500000012.cehuwbmakiwh.us-east-1.rds.amazonaws.com/indexify
+
+indexConfig:
+  index_store: PgVector
+  pg_vector_config:
+    addr: postgres://indexify_user:indexify@terraform-20240813131549107500000012.cehuwbmakiwh.us-east-1.rds.amazonaws.com/indexify
+    m: 16
+    efconstruction: 64
+    efsearch: 40
+
+metadataStorage:
+  metadata_store: postgres
+  conn_url: postgres://indexify_user:indexify@terraform-20240813131549107500000012.cehuwbmakiwh.us-east-1.rds.amazonaws.com/indexify
+
+blobStore:
+  allowHTTP: true
+  endpoint: http://blob-store:9000
+  credentialSecret: blob-store
+  config:
+    backend: s3
+    s3:
+      bucket: indexify
+      region: us-east-1
+
+api:
+  enabled: true
+  image: tensorlake/indexify:stable
+  ingress:
+    enabled: false
+
+coordinator:
+  enabled: true
+  name: coordinator
+  image: tensorlake/indexify:stable
+
+extractors:
+  - image: tensorlake/chunker:latest
+    name: chunker
+    replicas: 1
+
+extraObjects: []
+
+minio:
+  enabled: true
+
+postgresql:
+  enabled: false
